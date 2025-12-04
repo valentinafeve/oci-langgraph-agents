@@ -1,0 +1,1 @@
+SUMMARIZATION_PROMPT = """Summarize the following text:"""

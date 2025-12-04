@@ -1,0 +1,24 @@
+from langchain.prompts import ChatPromptTemplate
+from langchain_oci.chat_models import ChatOCIGenAI
+from langchain.schema.output_parser import StrOutputParser
+
+prompt = ChatPromptTemplate.from_template("""Translate the following text into French. 
+If the text is a question, first translate the question 
+and then answer the question in French.: {text}""")
+
+llm = ChatOCIGenAI(
+    model_id="meta.llama-4-scout-17b-16e-instruct",
+    service_endpoint="https://inference.generativeai.us-chicago-1.oci.oraclecloud.com",
+    compartment_id="<sandbox-compartment>",
+    model_kwargs={"temperature": 0, "max_tokens": 500},
+    auth_profile="<auth-profile-name-in-config-file>",  
+    auth_file_location="<path-to-config-file>",
+    )
+
+output_parser = StrOutputParser()
+
+chain = prompt | llm | output_parser
+input_data = {"text": "What are the four seasons in a year?"}
+
+result = chain.invoke(input_data)
+print(result)
